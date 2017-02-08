@@ -3,14 +3,14 @@ varying lowp vec2 vTex;
 uniform lowp sampler2D samplerFront;
 uniform lowp float alphaDither;
 
-const lowp mat4 ptn1 = mat4(0.0, 0.0, 0.0, 0.0,    0.0, 0.0, 1.0, 0.0,    0.0, 0.0, 0.0, 0.0,    1.0, 0.0, 0.0, 0.0);
-const lowp mat4 ptn2 = mat4(1.0, 0.0, 1.0, 0.0,    0.0, 0.0, 0.0, 0.0,    1.0, 0.0, 1.0, 0.0,    0.0, 0.0, 0.0, 0.0);
-const lowp mat4 ptn3 = mat4(0.0, 0.0, 1.0, 0.0,    0.0, 1.0, 0.0, 1.0,    1.0, 0.0, 0.0, 0.0,    0.0, 1.0, 0.0, 1.0);
-const lowp mat4 ptn5 = mat4(1.0, 1.0, 0.0, 1.0,    1.0, 0.0, 1.0, 0.0,    0.0, 1.0, 1.0, 1.0,    1.0, 0.0, 1.0, 0.0);
-const lowp mat4 ptn6 = mat4(0.0, 1.0, 0.0, 1.0,    1.0, 1.0, 1.0, 1.0,    0.0, 1.0, 0.0, 1.0,    1.0, 1.0, 1.0, 1.0);
-const lowp mat4 ptn7 = mat4(1.0, 1.0, 1.0, 1.0,    1.0, 1.0, 0.0, 1.0,    1.0, 1.0, 1.0, 1.0,    0.0, 1.0, 1.0, 1.0);
+const lowp mat4 ptn1 = mat4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
+const lowp mat4 ptn2 = mat4(1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+const lowp mat4 ptn3 = mat4(0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0);
+const lowp mat4 ptn5 = mat4(1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0);
+const lowp mat4 ptn6 = mat4(0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0);
+const lowp mat4 ptn7 = mat4(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0);
 
-float fetchFactor(mat4 matrix, int x, int y)
+lowp float fetchFactor(lowp mat4 matrix, lowp int x, lowp int y)
 {
 	if (x == 0)
 	{
@@ -44,16 +44,16 @@ float fetchFactor(mat4 matrix, int x, int y)
 
 void main(void)
 {
-	vec4 front = texture2D(samplerFront, vTex);
+	lowp vec4 front = texture2D(samplerFront, vTex);
 
-	vec2 xy = gl_FragCoord.xy;
-	float xf = mod(xy.x, 4.0);
-	float yf = mod(xy.y, 4.0);
-	int x = int(xf);
-	int y = int(yf);
+	lowp vec2 xy = gl_FragCoord.xy;
+	lowp float xf = mod(xy.x, 4.0);
+	lowp float yf = mod(xy.y, 4.0);
+	lowp int x = int(xf);
+	lowp int y = int(yf);
 
-	float factor = 0.0;
-	int pattern = int(8.0 * alphaDither);
+	lowp float factor = 0.0;
+	lowp int pattern = int(8.0 * alphaDither);
 
 	if (pattern == 0) factor = 0.0;
 	if (pattern == 1) factor = fetchFactor(ptn1, x, y);
