@@ -7,4 +7,4 @@ Included are:
   Effect descriptor (alphadither.xml)
   GLSL Shader (alphadither.fx)
 
-See it in action https://josephbt.itch.io/alpha-dither
+See it in action https://josephblt.itch.io/alpha-dither
