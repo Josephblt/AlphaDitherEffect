@@ -39,6 +39,13 @@
 			<initial>1</initial>
 			<uniform>alphaDither</uniform>
 		</param>
+		<param>
+			<name>Scale</name>
+			<description>The pixel scale.</description>
+			<type>float</type>
+			<initial>1</initial>
+			<uniform>scale</uniform>
+		</param>		
 	</parameters>
 	
 </c2effect>
