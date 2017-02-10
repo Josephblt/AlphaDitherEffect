@@ -1,16 +1,46 @@
-varying lowp vec2 vTex;
+varying highp vec2 vTex;
 
-uniform lowp sampler2D samplerFront;
-uniform lowp float alphaDither;
+uniform highp sampler2D samplerFront;
+uniform highp float alphaDither;
+uniform highp float scale;
 
-const lowp mat4 ptn1 = mat4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
-const lowp mat4 ptn2 = mat4(1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-const lowp mat4 ptn3 = mat4(0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0);
-const lowp mat4 ptn5 = mat4(1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0);
-const lowp mat4 ptn6 = mat4(0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0);
-const lowp mat4 ptn7 = mat4(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0);
+const highp mat4 ptn1 = mat4(0.0, 0.0, 0.0, 0.0, 
+							0.0, 0.0, 1.0, 0.0, 
+							0.0, 0.0, 0.0, 0.0, 
+							1.0, 0.0, 0.0, 0.0);
 
-lowp float fetchFactor(lowp mat4 matrix, lowp int x, lowp int y)
+const highp mat4 ptn2 = mat4(1.0, 0.0, 1.0, 0.0, 
+							0.0, 0.0, 0.0, 0.0, 
+							1.0, 0.0, 1.0, 0.0, 
+							0.0, 0.0, 0.0, 0.0);
+
+const highp mat4 ptn3 = mat4(0.0, 0.0, 1.0, 0.0, 
+							0.0, 1.0, 0.0, 1.0, 
+							1.0, 0.0, 0.0, 0.0, 
+							0.0, 1.0, 0.0, 1.0);
+
+const highp mat4 ptn4 = mat4(1.0, 0.0, 1.0, 0.0, 
+							0.0, 1.0, 0.0, 1.0, 
+							1.0, 0.0, 1.0, 0.0, 
+							0.0, 1.0, 0.0, 1.0);
+
+const highp mat4 ptn5 = mat4(1.0, 1.0, 0.0, 1.0, 
+							1.0, 0.0, 1.0, 0.0, 
+							0.0, 1.0, 1.0, 1.0, 
+							1.0, 0.0, 1.0, 0.0);
+
+const highp mat4 ptn6 = mat4(0.0, 1.0, 0.0, 1.0, 
+							1.0, 1.0, 1.0, 1.0, 
+							0.0, 1.0, 0.0, 1.0, 
+							1.0, 1.0, 1.0, 1.0);
+
+const highp mat4 ptn7 = mat4(1.0, 1.0, 1.0, 1.0, 
+							1.0, 1.0, 0.0, 1.0, 
+							1.0, 1.0, 1.0, 1.0, 
+							0.0, 1.0, 1.0, 1.0);
+
+
+highp float fetchFactor(highp mat4 matrix, highp int x, highp int y)
 {
 	if (x == 0)
 	{
@@ -44,22 +74,23 @@ lowp float fetchFactor(lowp mat4 matrix, lowp int x, lowp int y)
 
 void main(void)
 {
-	lowp vec4 front = texture2D(samplerFront, vTex);
+	highp vec4 front = texture2D(samplerFront, vTex);
+	highp vec2 xy = gl_FragCoord.xy;
 
-	lowp vec2 xy = gl_FragCoord.xy;
-	lowp float xf = mod(xy.x, 4.0);
-	lowp float yf = mod(xy.y, 4.0);
-	lowp int x = int(xf);
-	lowp int y = int(yf);
+	highp float xf = mod(xy.x / scale, 4.0);
+	highp float yf = mod(xy.y / scale, 4.0);
 
-	lowp float factor = 0.0;
-	lowp int pattern = int(8.0 * alphaDither);
+	highp int x = int(xf);
+	highp int y = int(yf);
+
+	highp float factor = 0.0;
+	highp int pattern = int(8.0 * alphaDither);
 
 	if (pattern == 0) factor = 0.0;
 	if (pattern == 1) factor = fetchFactor(ptn1, x, y);
 	if (pattern == 2) factor = fetchFactor(ptn2, x, y);
 	if (pattern == 3) factor = fetchFactor(ptn3, x, y);
-	if (pattern == 4) factor = abs(mod(xf, 2.0) - mod(yf, 2.0));
+	if (pattern == 4) factor = fetchFactor(ptn4, x, y);
 	if (pattern == 5) factor = fetchFactor(ptn5, x, y);
 	if (pattern == 6) factor = fetchFactor(ptn6, x, y);
 	if (pattern == 7) factor = fetchFactor(ptn7, x, y);
